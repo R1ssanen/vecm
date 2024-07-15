@@ -1,0 +1,5 @@
+.cache/*
+CMakeLists.txt
+*.sh
+build/*
+test.c
