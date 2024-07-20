@@ -14,16 +14,34 @@ typedef __m128 mvec4f;
 #define mset4f(_Val)            _mm_set_ps1((f32)(_Val))
 #define mzero4f()               _mm_setzero_ps()
 
-static inline mvec4f mload4f(const f32* _xddr) {
-    assert(_xddr);
-    return _mm_loadu_ps(_xddr);
+static inline mvec4f mload4f(const f32* _Addr) {
+    assert(_Addr);
+    return _mm_loadu_ps(_Addr);
 }
 
-/** @brief Arithmetic Math */
-#define madd4f(_x, _y) _mm_add_ps(_x, _y)
-#define msub4f(_x, _y) _mm_sub_ps(_x, _y)
-#define mmul4f(_x, _y) _mm_mul_ps(_x, _y)
-#define mdiv4f(_x, _y) _mm_div_ps(_x, _y)
+/** @brief Arithmetic Vector */
+static inline mvec4f _madd_v4f_v4f(const mvec4f _x, const mvec4f _y) { return _mm_add_ps(_x, _y); }
+
+static inline mvec4f _msub_v4f_v4f(const mvec4f _x, const mvec4f _y) { return _mm_sub_ps(_x, _y); }
+
+static inline mvec4f _mmul_v4f_v4f(const mvec4f _x, const mvec4f _y) { return _mm_mul_ps(_x, _y); }
+
+static inline mvec4f _mdiv_v4f_v4f(const mvec4f _x, const mvec4f _y) { return _mm_div_ps(_x, _y); }
+
+/** @brief Arithmetic Scalar */
+static inline mvec4f _madd_v4f_f32(const mvec4f _v, f32 _s) { return _mm_add_ps(_v, mset4f(_s)); }
+
+static inline mvec4f _msub_v4f_f32(const mvec4f _v, f32 _s) { return _mm_sub_ps(_v, mset4f(_s)); }
+
+static inline mvec4f _mmul_v4f_f32(const mvec4f _v, f32 _s) { return _mm_mul_ps(_v, mset4f(_s)); }
+
+static inline mvec4f _mdiv_v4f_f32(const mvec4f _v, f32 _s) { return _mm_div_ps(_v, mset4f(_s)); }
+
+/** @brief Arithmetic Generics */
+#define madd4f(_a, _b) _Generic((_b), mvec4f: _madd_v4f_v4f, f32: _madd_v4f_f32)(_a, _b)
+#define msub4f(_a, _b) _Generic((_b), mvec4f: _msub_v4f_v4f, f32: _msub_v4f_f32)(_a, _b)
+#define mmul4f(_a, _b) _Generic((_b), mvec4f: _mmul_v4f_v4f, f32: _mmul_v4f_f32)(_a, _b)
+#define mdiv4f(_a, _b) _Generic((_b), mvec4f: _mdiv_v4f_v4f, f32: _mdiv_v4f_f32)(_a, _b)
 
 /** @brief Vector Operations */
 static inline f32 mdot4f(const mvec4f _x, const mvec4f _y) {

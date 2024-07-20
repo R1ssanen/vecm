@@ -13,4 +13,8 @@
 #include "mat/mat3x3.h"
 #include "mat/mat4x4.h"
 
+/** @brief Packing */
+#include "packing/16x8u.h"
+#include "packing/4x32u.h"
+
 #endif
