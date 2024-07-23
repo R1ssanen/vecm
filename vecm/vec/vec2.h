@@ -45,12 +45,15 @@ static inline mvec2f _mdiv_v2f_f32(const mvec2f _v, f32 _s) { return _mm_div_pd(
 
 /** @brief Vector Operations */
 static inline f64 mdot2f(const mvec2f _x, const mvec2f _y) {
-    mvec2f _Tmp = mmul2f(_x, _y);
-    return (_Tmp[0] + _Tmp[1]);
+    mvec2f  v       = _mmul_v2f_v2f(_x, _y);
+    __m128  undef   = _mm_undefined_ps();
+    __m128  shuftmp = _mm_movehl_ps(undef, _mm_castpd_ps(v));
+    __m128d shuf    = _mm_castps_pd(shuftmp);
+    return _mm_cvtsd_f64(_mm_add_sd(v, shuf));
 }
 
 static inline f64    mlen2f(const mvec2f _x) { return sqrt(mdot2f(_x, _x)); }
 
-static inline mvec2f mnorm2f(const mvec2f _x) { return mdiv2f(_x, mset2f(mlen2f(_x))); }
+static inline mvec2f mnorm2f(const mvec2f _x) { return _mdiv_v2f_v2f(_x, mset2f(mlen2f(_x))); }
 
 #endif

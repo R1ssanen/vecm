@@ -45,8 +45,12 @@ static inline mvec3f _mdiv_v3f_f32(const mvec3f _v, f32 _s) { return _mm_div_ps(
 
 /** @brief Vector Operations */
 static inline f32 mdot3f(const mvec3f _x, const mvec3f _y) {
-    mvec3f _Tmp = _mmul_v3f_v3f(_x, _y);
-    return (_Tmp[0] + _Tmp[1] + _Tmp[2]);
+    mvec3f v    = _mmul_v3f_v3f(_x, _y);
+    mvec3f shuf = _mm_shuffle_ps(v, v, _MM_SHUFFLE(2, 3, 0, 1));
+    mvec3f sums = _mm_add_ps(v, shuf);
+    shuf        = _mm_movehl_ps(shuf, sums);
+    sums        = _mm_add_ss(sums, shuf);
+    return _mm_cvtss_f32(sums);
 }
 
 static inline mvec3f mcross3f(const mvec3f _x, const mvec3f _y) {

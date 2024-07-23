@@ -45,8 +45,12 @@ static inline mvec4f _mdiv_v4f_f32(const mvec4f _v, f32 _s) { return _mm_div_ps(
 
 /** @brief Vector Operations */
 static inline f32 mdot4f(const mvec4f _x, const mvec4f _y) {
-    mvec4f _Tmp = mmul4f(_x, _y);
-    return (_Tmp[0] + _Tmp[1] + _Tmp[2] + _Tmp[3]);
+    mvec4f v    = _mmul_v4f_v4f(_x, _y);
+    mvec4f shuf = _mm_shuffle_ps(v, v, _MM_SHUFFLE(2, 3, 0, 1));
+    mvec4f sums = _mm_add_ps(v, shuf);
+    shuf        = _mm_movehl_ps(shuf, sums);
+    sums        = _mm_add_ss(sums, shuf);
+    return _mm_cvtss_f32(sums);
 }
 
 static inline mvec4f mcross4f(const mvec4f _x, const mvec4f _y) {
@@ -55,11 +59,11 @@ static inline mvec4f mcross4f(const mvec4f _x, const mvec4f _y) {
     mvec4f _y1 = _mm_shuffle_ps(_y, _y, _MM_SHUFFLE(3, 1, 0, 2));
     mvec4f _y2 = _mm_shuffle_ps(_y, _y, _MM_SHUFFLE(3, 0, 2, 1));
 
-    return msub4f(mmul4f(_x1, _y1), mmul4f(_x2, _y2));
+    return _msub_v4f_v4f(_mmul_v4f_v4f(_x1, _y1), _mmul_v4f_v4f(_x2, _y2));
 }
 
 static inline f32    mlen4f(const mvec4f _x) { return sqrtf(mdot4f(_x, _x)); }
 
-static inline mvec4f mnorm4f(const mvec4f _x) { return mdiv4f(_x, mset4f(mlen4f(_x))); }
+static inline mvec4f mnorm4f(const mvec4f _x) { return _mdiv_v4f_v4f(_x, mset4f(mlen4f(_x))); }
 
 #endif
