@@ -1,7 +1,6 @@
 #ifndef VEC2_H
 #define VEC2_H
 
-#include <assert.h>
 #include <math.h>
 #include <x86intrin.h>
 
@@ -10,14 +9,11 @@
 typedef __m128d mvec2f;
 
 /** @brief Initialization */
-#define mpack2f(_x, _y) _mm_set_pd((f64)(_y), (f64)(_x))
-#define mset2f(_Val)    _mm_set1_pd((f64)(_Val))
-#define mzero2f()       _mm_setzero_pd()
-
-static inline mvec2f mload2f(const f64* _Addr) {
-    assert(_Addr);
-    return _mm_loadu_pd(_Addr);
-}
+#define mpack2f(_x, _y)        _mm_setr_pd(_x, _y)
+#define mset2f(_s)             _mm_set1_pd(_s)
+#define mzero2f()              _mm_setzero_pd()
+#define mload2f(_addr)         _mm_loadu_pd(_addr)
+#define mshuffle2f(_v, _x, _y) _mm_shuffle_pd(_v, _v, _MM_SHUFFLE(3, 2, _y, _x))
 
 /** @brief Arithmetic Vector */
 static inline mvec2f _madd_v2f_v2f(const mvec2f _x, const mvec2f _y) { return _mm_add_pd(_x, _y); }
@@ -45,7 +41,7 @@ static inline mvec2f _mdiv_v2f_f32(const mvec2f _v, f32 _s) { return _mm_div_pd(
 
 /** @brief Vector Operations */
 static inline f64 mdot2f(const mvec2f _x, const mvec2f _y) {
-    mvec2f  v       = _mmul_v2f_v2f(_x, _y);
+    __m128d v       = _mm_mul_pd(_x, _y);
     __m128  undef   = _mm_undefined_ps();
     __m128  shuftmp = _mm_movehl_ps(undef, _mm_castpd_ps(v));
     __m128d shuf    = _mm_castps_pd(shuftmp);
@@ -54,6 +50,6 @@ static inline f64 mdot2f(const mvec2f _x, const mvec2f _y) {
 
 static inline f64    mlen2f(const mvec2f _x) { return sqrt(mdot2f(_x, _x)); }
 
-static inline mvec2f mnorm2f(const mvec2f _x) { return _mdiv_v2f_v2f(_x, mset2f(mlen2f(_x))); }
+static inline mvec2f mnorm2f(const mvec2f _x) { return _mm_div_pd(_x, mset2f(mlen2f(_x))); }
 
 #endif

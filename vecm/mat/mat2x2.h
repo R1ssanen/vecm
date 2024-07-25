@@ -1,8 +1,6 @@
 #ifndef MAT2X2_H
 #define MAT2X2_H
 
-#include <assert.h>
-
 #include "../vec/vec2.h"
 
 typedef struct mmat2x2f {
@@ -11,6 +9,7 @@ typedef struct mmat2x2f {
 
 typedef mmat2x2f mmat2f;
 
+/** @brief Basic */
 #define mzero2x2f()                                                                                \
     (mmat2f) {                                                                                     \
         ._m = { mzero2f(), mzero2f() }                                                             \
@@ -18,20 +17,18 @@ typedef mmat2x2f mmat2f;
 
 #define mident2x2f()                                                                               \
     (mmat2f) {                                                                                     \
-        ._m = { mpack2f(1.f, 0.f), mpack2f(0.f, 1.f) }                                             \
+        ._m = { mpack2f(1.0, 0.0), mpack2f(0.0, 1.0) }                                             \
     }
 
-#define mset2x2f(_Val)                                                                             \
+#define mset2x2f(_s)                                                                               \
     (mmat2f) {                                                                                     \
-        ._m = { mset2f(_Val), mset2f(_Val) }                                                       \
+        ._m = { mset2f(_s), mset2f(_s) }                                                           \
     }
 
-static inline mmat2f mload2x2f(const f64* _Addr) {
-    assert(_Addr);
-    return (mmat2f){
-        ._m = { mload2f(_Addr), mload2f(_Addr + 3) }
-    };
-}
+#define mload2x2f(_addr)                                                                           \
+    (mmat2f) {                                                                                     \
+        ._m = { mload2f(_Addr), mload2f(_Addr + 3) }                                               \
+    }
 
 /** @brief Arithmetic Matrix */
 static inline mmat2f _madd2x2f_mat2f(const mmat2f _a, const mmat2f _b) {

@@ -1,8 +1,6 @@
 #ifndef MAT3X3_H
 #define MAT3X3_H
 
-#include <assert.h>
-
 #include "../vec/vec3.h"
 
 typedef struct mmat3x3f {
@@ -11,6 +9,7 @@ typedef struct mmat3x3f {
 
 typedef mmat3x3f mmat3f;
 
+/** @brief Basic */
 #define mzero3x3f()                                                                                \
     (mmat3f) {                                                                                     \
         ._m = { mzero3f(), mzero3f(), mzero3f() }                                                  \
@@ -21,17 +20,15 @@ typedef mmat3x3f mmat3f;
         ._m = { mpack3f(1.f, 0.f, 0.f), mpack3f(0.f, 1.f, 0.f), mpack3f(0.f, 0.f, 1.f) }           \
     }
 
-#define mset3x3f(_Val)                                                                             \
+#define mset3x3f(_s)                                                                               \
     (mmat3f) {                                                                                     \
-        ._m = { mset3f(_Val), mset3f(_Val), mset3f(_Val) }                                         \
+        ._m = { mset3f(_s), mset3f(_s), mset3f(_s) }                                               \
     }
 
-static inline mmat3f mload3x3f(const f32* _Addr) {
-    assert(_Addr);
-    return (mmat3f){
-        ._m = { mload3f(_Addr), mload3f(_Addr + 3), mload3f(_Addr + 6) }
-    };
-}
+#define mload3x3f(_addr)                                                                           \
+    (mmat3f) {                                                                                     \
+        ._m = { mload3f(_addr), mload3f(_addr + 3), mload3f(_addr + 6) }                           \
+    }
 
 /** @brief Arithmetic Matrix */
 static inline mmat3f _madd3x3f_mat3f(const mmat3f _a, const mmat3f _b) {

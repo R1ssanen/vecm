@@ -1,8 +1,6 @@
 #ifndef MAT4X4_H
 #define MAT4X4_H
 
-#include <assert.h>
-
 #include "../vec/vec4.h"
 
 typedef struct mmat4x4f {
@@ -11,6 +9,7 @@ typedef struct mmat4x4f {
 
 typedef mmat4x4f mmat4f;
 
+/** @brief Basic */
 #define mzero4x4f()                                                                                \
     (mmat4f) {                                                                                     \
         ._m = { mzero4f(), mzero4f(), mzero4f(), mzero4f() }                                       \
@@ -26,17 +25,15 @@ typedef mmat4x4f mmat4f;
         }                                                                                          \
     }
 
-#define mset4x4f(_Val)                                                                             \
+#define mset4x4f(_s)                                                                               \
     (mmat4f) {                                                                                     \
-        ._m = { mset4f(_Val), mset4f(_Val), mset4f(_Val), mset4f(_Val) }                           \
+        ._m = { mset4f(_s), mset4f(_s), mset4f(_s), mset4f(_s) }                                   \
     }
 
-static inline mmat4f mload4x4f(const f32* _Addr) {
-    assert(_Addr);
-    return (mmat4f){
-        ._m = { mload4f(_Addr), mload4f(_Addr + 3), mload4f(_Addr + 6), mload4f(_Addr + 9) }
-    };
-}
+#define mload4x4f(_addr)                                                                           \
+    (mmat4f) {                                                                                     \
+        ._m = { mload4f(_addr), mload4f(_addr + 3), mload4f(_addr + 6), mload4f(_addr + 9) }       \
+    }
 
 /** @brief Arithmetic Matrix */
 static inline mmat4f _madd4x4f_mat4f(const mmat4f _a, const mmat4f _b) {

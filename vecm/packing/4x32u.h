@@ -1,26 +1,19 @@
 #ifndef PACK_4X32U_H
 #define PACK_4X32U_H
 
-#include <assert.h>
 #include <x86intrin.h>
 
 #include "../types.h"
 
 typedef __m128i m4x32u;
 
-#define mpack4x32u(_x, _y, _z, _w) _mm_set_epi32((i32)(_w), (i32)(_z), (i32)(_y), (i32)(_x))
-#define mset4x32u(_Val)            _mm_set1_epi32((i32)(_Val))
+/** @brief Basic */
+#define mpack4x32u(_x, _y, _z, _w) _mm_setr_epi32(_x, _y, _z, _w)
+#define mset4x32u(_s)              _mm_set1_epi32(_s)
 #define mzero4x32u()               _mm_setzero_si128()
 
-static inline m4x32u mload4x32u(const u32* _Addr) {
-    assert(_Addr);
-    return _mm_loadu_si128((__m128i*)_Addr);
-}
-
-static inline void mstore4x32u(u32* _Addr, const m4x32u _Val) {
-    assert(_Addr);
-    _mm_storeu_si128((__m128i*)_Addr, _Val);
-}
+#define mload4x32u(_addr)          _mm_loadu_si128((__m128i*)_addr)
+#define mstore4x32u(_addr)         _mm_storeu_si128((__m128i*)_addr)
 
 /** @brief Arithmeric Pack */
 static inline m4x32u _madd4x32u_4x32u(const m4x32u _a, const m4x32u _b) {
