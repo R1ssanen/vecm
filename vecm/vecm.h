@@ -5,8 +5,8 @@
 
 /** @brief Vector types */
 #include "vec/vec2.h"
-#include "vec/vec3.h"
-#include "vec/vec4.h"
+#include "vec/vec3f.h"
+#include "vec/vec4f.h"
 
 /** @brief Matrix types */
 #include "mat/mat2x2.h"

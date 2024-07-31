@@ -25,6 +25,9 @@ typedef uint64_t u64;
 typedef float    f32;
 typedef double   f64;
 
-#define unused __attribute__((unused))
+#define unused            __attribute__((unused))
+
+#define DO_PRAGMA(_str)   _Pragma(#_str)
+#define VM_ERROR(_errmsg) DO_PRAGMA(GCC error #_errmsg)
 
 #endif
